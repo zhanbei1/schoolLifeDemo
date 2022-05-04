@@ -1,0 +1,30 @@
+type (
+	Request {
+		Name string `path:"name,options=you|me"`
+	}
+	CommonResponse {
+		Message string `json:"message"`
+	}
+	// 用户注册基本信息
+	RegisterBaseInfo {
+		UserName string `json:"userName"`
+		PassWord string `json:"pw"`
+		Role     int    `json:"role"`
+	}
+	// 学生注册基本信息
+	RegisterInfo {
+		RegisterBaseInfo
+		SchoolNum  string `json:"sNo"`
+		SchoolName string `json:"sName"`
+		Grade      int    `json:"grade"`
+	}
+)
+
+service schoolLifeDemo-api {
+	@handler SchoolLifeDemoHandler
+	get /from/:name(Request) returns (CommonResponse)
+	
+	@handler RegisterHandler
+	post /user/register(RegisterInfo) returns()
+	
+}
