@@ -2,8 +2,11 @@ type (
 	Request {
 		Name string `path:"name,options=you|me"`
 	}
+
 	CommonResponse {
-		Message string `json:"message"`
+		Message     string `json:"message"`
+		Code        int16  `json:"code"`
+		Description string `json:"description"`
 	}
 	// 用户注册基本信息
 	RegisterBaseInfo {
@@ -13,10 +16,34 @@ type (
 	}
 	// 学生注册基本信息
 	RegisterInfo {
-		RegisterBaseInfo
+		UserName   string `json:"userName"`
 		SchoolNum  string `json:"sNo"`
 		SchoolName string `json:"sName"`
-		Grade      int    `json:"grade"`
+		PetName    string `json:"petName,omitempty"`
+		PhoneNo    string `json:"phoneNo,omitempty"`
+		PassWord   string `json:"password"`
+		Birthday   string `json:"birthday,omitempty"`
+		Gender     int    `json:"gender,options=-1|0|1,default=-1"`
+		Grade      int    `json:"grade,omitempty"`
+		Role       int    `json:"role,default=0"`
+	}
+
+	// 登陆信息
+	LoginInfo {
+		SchoolNum string `json:"sNo"`
+		PassWord  string `json:"password"`
+	}
+	LoginResponseInfo {
+		SchoolNo     string `json:"sNo"`
+		PetName      string `json:"petName"`
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	}
+
+	LoginResponse {
+		CommonResponse
+		Data LoginResponseInfo `json:"data"`
 	}
 )
 
@@ -25,6 +52,9 @@ service schoolLifeDemo-api {
 	get /from/:name(Request) returns (CommonResponse)
 	
 	@handler RegisterHandler
-	post /user/register(RegisterInfo) returns()
+	post /user/register(RegisterInfo) returns(CommonResponse)
+	
+	@handler LoginHandler
+	post /user/login(LoginInfo) returns(LoginResponse)
 	
 }

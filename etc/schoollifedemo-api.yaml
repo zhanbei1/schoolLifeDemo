@@ -1,3 +1,18 @@
 Name: schoolLifeDemo-api
 Host: 0.0.0.0
 Port: 8888
+Mysql:
+  DataSource: root:907623841@tcp(60.205.184.182:3306)/schoollife?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+CacheRedis:
+  - Host: 60.205.184.182:6379
+    Pass: wangdachui123@321wangdachui
+    Type: node
+
+RedisConf: 
+  Host: 60.205.184.182:6379
+  Type: node
+  pass: wangdachui123@321wangdachui
+
+Auth:
+  AccessSecret: BAEEEF35-0585-FA07-707C-3B9023793604
+  AccessExpire: 600

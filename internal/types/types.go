@@ -6,7 +6,9 @@ type Request struct {
 }
 
 type CommonResponse struct {
-	Message string `json:"message"`
+	Message     string `json:"message"`
+	Code        int16  `json:"code"`
+	Description string `json:"description"`
 }
 
 type RegisterBaseInfo struct {
@@ -16,8 +18,32 @@ type RegisterBaseInfo struct {
 }
 
 type RegisterInfo struct {
-	RegisterBaseInfo
+	UserName   string `json:"userName"`
 	SchoolNum  string `json:"sNo"`
 	SchoolName string `json:"sName"`
-	Grade      int    `json:"grade"`
+	PetName    string `json:"petName,omitempty"`
+	PhoneNo    string `json:"phoneNo,omitempty"`
+	PassWord   string `json:"password"`
+	Birthday   string `json:"birthday,omitempty"`
+	Gender     int    `json:"gender,options=-1|0|1,default=-1"`
+	Grade      int    `json:"grade,omitempty"`
+	Role       int    `json:"role,default=0"`
+}
+
+type LoginInfo struct {
+	SchoolNum string `json:"sNo"`
+	PassWord  string `json:"password"`
+}
+
+type LoginResponseInfo struct {
+	SchoolNo     string `json:"sNo"`
+	PetName      string `json:"petName"`
+	AccessToken  string `json:"accessToken"`
+	AccessExpire int64  `json:"accessExpire"`
+	RefreshAfter int64  `json:"refreshAfter"`
+}
+
+type LoginResponse struct {
+	CommonResponse
+	Data LoginResponseInfo `json:"data"`
 }
