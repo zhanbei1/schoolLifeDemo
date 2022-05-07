@@ -47,3 +47,24 @@ type LoginResponse struct {
 	CommonResponse
 	Data LoginResponseInfo `json:"data"`
 }
+
+type UserInfoBody struct {
+	SchoolNum  string `json:"sNo"`
+	SchoolName string `json:"sName"`
+	IconUrl    string `json:"iconUrl"`
+	PetName    string `json:"petName,omitempty"`
+	PhoneNo    string `json:"phoneNo,omitempty"`
+	Birthday   string `json:"birthday,omitempty"`
+	Gender     int    `json:"gender,options=-1|0|1,default=-1"`
+	Grade      int    `json:"grade,omitempty"`
+	Role       int    `json:"role,default=0"`
+}
+
+type UserInfoRequest struct {
+	SchoolNum string `form:"sNo"`
+}
+
+type UserInfoResponse struct {
+	CommonResponse
+	Data UserInfoBody `json:"data"`
+}

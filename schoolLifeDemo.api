@@ -45,11 +45,45 @@ type (
 		CommonResponse
 		Data LoginResponseInfo `json:"data"`
 	}
-)
 
+	// 用户信息
+	UserInfoBody {
+		SchoolNum  string `json:"sNo"`
+		SchoolName string `json:"sName"`
+		IconUrl    string `json:"iconUrl"`
+		PetName    string `json:"petName,omitempty"`
+		PhoneNo    string `json:"phoneNo,omitempty"`
+		Birthday   string `json:"birthday,omitempty"`
+		Gender     int    `json:"gender,options=-1|0|1,default=-1"`
+		Grade      int    `json:"grade,omitempty"`
+		Role       int    `json:"role,default=0"`
+	}
+
+	UserInfoRequest {
+		SchoolNum string `form:"sNo"`
+	}
+
+	UserInfoResponse {
+		CommonResponse
+		Data UserInfoBody `json:"data"`
+	}
+
+	// 校园墙贴内容
+	SchoolNotesRequest{
+		SchoolNo string `json:"sNo"`
+		PetName string `json:"petName“`
+		NoteType int `json:"noteType,default=1"`
+		NoteTag string `json"noteTag"`
+		NoteContent string `json:"notes"`
+
+
+	}
+
+)
+// 不需要jwt登陆校验的接口
 service schoolLifeDemo-api {
 	@handler SchoolLifeDemoHandler
-	get /from/:name(Request) returns (CommonResponse)
+	get /from/:name(UserInfoRequest) returns (CommonResponse)
 	
 	@handler RegisterHandler
 	post /user/register(RegisterInfo) returns(CommonResponse)
@@ -57,4 +91,18 @@ service schoolLifeDemo-api {
 	@handler LoginHandler
 	post /user/login(LoginInfo) returns(LoginResponse)
 	
+}
+
+// 需要jwt权限校验的接口
+@server(
+	jwt: Auth
+)
+service schoolLifeDemo-api {
+	// 用户个人信息获取接口
+	@handler UserInfoHandler
+	get /user/userInfo(UserInfoRequest) returns (UserInfoResponse)
+
+	// 个人发送校园墙贴
+	@headler SendNotes
+	post /schoolwall/sentnotes() return (CommonResponse)
 }

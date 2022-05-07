@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"strings"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -17,4 +19,17 @@ func UserPassWordCryption(passWord string) (string, error) {
 func ComparePassword(loginPwd string, userPw string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(userPw), []byte(loginPwd))
 	return err == nil
+}
+
+// 用户手机号码加密
+func PhoneNoCryption(phoneNo string) string {
+	var cryptionPhone []string
+	if phoneNo == "" {
+		return ""
+	} else {
+		phoneNo := phoneNo[:len(phoneNo)-4]
+		cryptionPhone = append(cryptionPhone, phoneNo)
+		cryptionPhone = append(cryptionPhone, "****")
+		return strings.Join(cryptionPhone, "")
+	}
 }
