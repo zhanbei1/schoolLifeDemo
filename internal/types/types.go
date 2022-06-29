@@ -21,6 +21,7 @@ type RegisterInfo struct {
 	UserName   string `json:"userName"`
 	SchoolNum  string `json:"sNo"`
 	SchoolName string `json:"sName"`
+	SchoolCode int    `json:"sCode"`
 	PetName    string `json:"petName,omitempty"`
 	PhoneNo    string `json:"phoneNo,omitempty"`
 	PassWord   string `json:"password"`
@@ -55,8 +56,8 @@ type UserInfoBody struct {
 	PetName    string `json:"petName,omitempty"`
 	PhoneNo    string `json:"phoneNo,omitempty"`
 	Birthday   string `json:"birthday,omitempty"`
-	Gender     int    `json:"gender,options=-1|0|1,default=-1"`
-	Grade      int    `json:"grade,omitempty"`
+	Gender     string `json:"gender,options='nil'|'男'|'女',default='nil'"`
+	Grade      string `json:"grade,omitempty"`
 	Role       int    `json:"role,default=0"`
 }
 
@@ -67,4 +68,70 @@ type UserInfoRequest struct {
 type UserInfoResponse struct {
 	CommonResponse
 	Data UserInfoBody `json:"data"`
+}
+
+type SchoolNotesRequest struct {
+	SchoolNo    string `json:"sNo"`
+	PetName     string `json:"petName"`
+	NoteType    int    `json:"noteType,default=1"`
+	NoteTitle   string `json:"noteTitle"`
+	NoteTag     string `json:"noteTag"`
+	NoteContent string `json:"notes"`
+	Watermark   bool   `json:"watermark,default=true"`
+}
+
+type SchoolWallNotes struct {
+	StudentNo    string `json:"student_no"`
+	UserPetName  string `json:"user_petname"`
+	NoteType     int64  `json:"note_type"`     // 信息墙类型
+	NoteTitle    string `json:"note_title"`    // 标签标题
+	NoteTag      string `json:"note_tag"`      // 信息标签
+	NotesContent string `json:"notes_content"` // 信息内容
+	SchoolName   string `json:"school_name"`
+	ImagesUrl    string `json:"images_url,default="""` // 图片URL列表，数组形式，最多9张
+	Watermark    int64  `json:"watermark,default=1"`   // 是否打标签
+	CreateTime   string `json:"create_time"`
+	UpdateTime   string `json:"update_time"`
+	Status       int64  `json:"status,default=0"` // 0:信息有效，1:信息删除
+}
+
+type SchoolWallResponse struct {
+	UserPetName  string `json:"user_petname"`  // 用户昵称
+	NoteType     int64  `json:"note_type"`     // 信息墙类型
+	NoteTitle    string `json:"note_title"`    // 标签标题
+	NoteTag      string `json:"note_tag"`      // 信息标签
+	NotesContent string `json:"notes_content"` // 信息内容
+	SchoolName   string `json:"school_name"`
+	ImagesUrl    string `json:"images_url,default="""` // 图片URL列表，数组形式，最多9张
+	VidoUrl      string `json:"vido_url,default="""`   //视频地址
+	CreateTime   string `json:"create_time"`
+	UpdateTime   string `json:"update_time"`
+}
+
+type UserOrdersRequest struct {
+	ID int64 `path:"id"`
+}
+
+type UserOrdersReply struct {
+	ID       string `json:"id"`
+	State    uint32 `json:"state"`
+	CreateAt string `json:"create_at"`
+}
+
+type OrderReply struct {
+	ID       string `json:"id"`
+	State    uint32 `json:"state"`
+	CreateAt string `json:"create_at"`
+}
+
+type NotesListRequest struct {
+	NotesContent string `json:"keywords,default=""`
+	NoteType     int64  `json:"note_type,default=0"`
+	NoteTag      string `json:"note_tag,default="""`
+	SchoolName   string `json:"school_name,default="""`
+}
+
+type NotesListResponse struct {
+	CommonResponse
+	SchoolWallResponse
 }

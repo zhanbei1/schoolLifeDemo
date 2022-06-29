@@ -41,6 +41,10 @@ func (l *UserInfoLogic) UserInfo(req *types.UserInfoRequest) (resp *types.UserIn
 		return &response, nil
 	}
 
+	grade, isOk := config.SchoolGradeMap[int(result.Gender.Int64)]
+	if !isOk {
+		grade = "----"
+	}
 	studentInfoBody := types.UserInfoBody{
 		SchoolNum:  result.StudentNo,
 		SchoolName: result.SchoolName,
@@ -48,9 +52,14 @@ func (l *UserInfoLogic) UserInfo(req *types.UserInfoRequest) (resp *types.UserIn
 		PetName:    result.PetName.String,
 		PhoneNo:    utils.PhoneNoCryption(result.PhoneNo.String),
 		Birthday:   result.Birthday.String,
-		Gender:     int(result.Gender.Int64),
-		Grade:      int(result.Grade.Int64),
-		Role:       1,
+		Gender: func(gender int) string {
+			if gender == 0 {
+				return "女"
+			}
+			return "男"
+		}(int(result.Gender.Int64)),
+		Grade: grade,
+		Role:  1,
 	}
 
 	response.Data = studentInfoBody

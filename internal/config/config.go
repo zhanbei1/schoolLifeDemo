@@ -17,4 +17,9 @@ type Config struct {
 		AccessSecret string
 		AccessExpire int64
 	}
+	ElasticSearch struct {
+		Addresses []string
+		UserName  string
+		PassWord  string
+	}
 }

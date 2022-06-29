@@ -24,7 +24,6 @@ var (
 
 	cacheStudentBaseInfoIdPrefix        = "cache:studentBaseInfo:id:"
 	cacheStudentBaseInfoStudentNoPrefix = "cache:studentBaseInfo:studentNo:"
-	cacheStudentBaseInfoStudentPetNamePrefix = "cache:studentBaseInfo:petName:"
 )
 
 type (
@@ -32,7 +31,6 @@ type (
 		Insert(ctx context.Context, data *StudentBaseInfo) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*StudentBaseInfo, error)
 		FindOneByStudentNo(ctx context.Context, studentNo string) (*StudentBaseInfo, error)
-		FindOneByPetname(ctx context.Context,petName string) (*StudentBaseInfo, error)
 		Update(ctx context.Context, data *StudentBaseInfo) error
 		Delete(ctx context.Context, id int64) error
 	}
@@ -67,8 +65,8 @@ func newStudentBaseInfoModel(conn sqlx.SqlConn, c cache.CacheConf) *defaultStude
 }
 
 func (m *defaultStudentBaseInfoModel) Insert(ctx context.Context, data *StudentBaseInfo) (sql.Result, error) {
-	studentBaseInfoStudentNoKey := fmt.Sprintf("%s%v", cacheStudentBaseInfoStudentNoPrefix, data.StudentNo)
 	studentBaseInfoIdKey := fmt.Sprintf("%s%v", cacheStudentBaseInfoIdPrefix, data.Id)
+	studentBaseInfoStudentNoKey := fmt.Sprintf("%s%v", cacheStudentBaseInfoStudentNoPrefix, data.StudentNo)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", m.table, studentBaseInfoRowsExpectAutoSet)
 		return conn.ExecCtx(ctx, query, data.StudentNo, data.SchoolName, data.Grade, data.PetName, data.IsDeleted, data.PhoneNo, data.IconUrl, data.Birthday, data.Gender, data.Password)
@@ -82,23 +80,6 @@ func (m *defaultStudentBaseInfoModel) FindOne(ctx context.Context, id int64) (*S
 	err := m.QueryRowCtx(ctx, &resp, studentBaseInfoIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
 		query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", studentBaseInfoRows, m.table)
 		return conn.QueryRowCtx(ctx, v, query, id)
-	})
-	switch err {
-	case nil:
-		return &resp, nil
-	case sqlc.ErrNotFound:
-		return nil, ErrNotFound
-	default:
-		return nil, err
-	}
-}
-
-func (m *defaultStudentBaseInfoModel) FindOneByPetname(ctx context.Context,petName string) (*StudentBaseInfo, error) {
-	studentBaseInfoPetNameKey := fmt.Sprintf("%s%v", cacheStudentBaseInfoStudentPetNamePrefix, petName)
-	var resp StudentBaseInfo
-	err := m.QueryRowCtx(ctx, &resp, studentBaseInfoPetNameKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
-		query := fmt.Sprintf("select %s from %s where `pet_name` = ? limit 1", studentBaseInfoRows, m.table)
-		return conn.QueryRowCtx(ctx, v, query, petName)
 	})
 	switch err {
 	case nil:
@@ -136,7 +117,7 @@ func (m *defaultStudentBaseInfoModel) Update(ctx context.Context, data *StudentB
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, studentBaseInfoRowsWithPlaceHolder)
 		return conn.ExecCtx(ctx, query, data.StudentNo, data.SchoolName, data.Grade, data.PetName, data.IsDeleted, data.PhoneNo, data.IconUrl, data.Birthday, data.Gender, data.Password, data.Id)
-	}, studentBaseInfoStudentNoKey, studentBaseInfoIdKey)
+	}, studentBaseInfoIdKey, studentBaseInfoStudentNoKey)
 	return err
 }
 
@@ -151,7 +132,7 @@ func (m *defaultStudentBaseInfoModel) Delete(ctx context.Context, id int64) erro
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		return conn.ExecCtx(ctx, query, id)
-	}, studentBaseInfoStudentNoKey, studentBaseInfoIdKey)
+	}, studentBaseInfoIdKey, studentBaseInfoStudentNoKey)
 	return err
 }
 

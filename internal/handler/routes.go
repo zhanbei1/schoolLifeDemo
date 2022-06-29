@@ -27,6 +27,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/user/login",
 				Handler: LoginHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/school/codemap",
+				Handler: SchoolCodeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/:id/orders",
+				Handler: UserOrdersHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/schoolwal/noteslist",
+				Handler: NotesListHandler(serverCtx),
+			},
 		},
 	)
 
@@ -36,6 +51,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/user/userInfo",
 				Handler: UserInfoHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/schoolwall/sentnotes",
+				Handler: SendNotesHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

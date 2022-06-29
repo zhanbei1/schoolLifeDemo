@@ -16,3 +16,9 @@ RedisConf:
 Auth:
   AccessSecret: BAEEEF35-0585-FA07-707C-3B9023793604
   AccessExpire: 600
+
+ElasticSearch:
+  Addresses: 
+   - http://60.205.184.182:19200
+  UserName: elastic
+  PassWord: "907623841"
