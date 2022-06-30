@@ -57,6 +57,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/schoolwall/sentnotes",
 				Handler: SendNotesHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/schoolwall/imgUpload",
+				Handler: ImgUploadHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 	)

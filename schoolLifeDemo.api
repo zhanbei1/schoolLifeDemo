@@ -133,6 +133,15 @@ type (
 		SchoolWallResponse
 		//		Data map[string] `json:"data"`
 	}
+
+	// 上传文件返回累
+	UploadFileResponse {
+		CommonResponse
+		FilePath string `json:"filePath"`
+	}
+	UploadFileRequest {
+		File string `json:"file"`
+	}
 )
 // 不需要jwt登陆校验的接口
 service schoolLifeDemo-api {
@@ -168,6 +177,7 @@ service schoolLifeDemo-api {
 	@handler SendNotesHandler
 	post /schoolwall/sentnotes(SchoolNotesRequest) returns (CommonResponse)
 	
-	// 获取校园贴列表，按照时间和热度排序
-	
+	// 图片文件的上传
+	@handler ImgUploadHandler
+	post /schoolwall/imgUpload() returns (UploadFileResponse)
 }

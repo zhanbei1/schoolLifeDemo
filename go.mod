@@ -8,6 +8,8 @@ require (
 	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f
 )
 
+require github.com/satori/go.uuid v1.2.0 // indirect
+
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
